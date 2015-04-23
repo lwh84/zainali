@@ -39,10 +39,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".MapsActivity2"
-            android:label="@string/title_activity_maps_activity2" >
-        </activity>
+
     </application>
 
 </manifest>
