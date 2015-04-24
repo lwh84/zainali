@@ -3,13 +3,22 @@ package com.wozainali.manho.myapplication;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.sax.RootElement;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.Xml;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class MapsActivity extends FragmentActivity {
 
@@ -20,6 +29,19 @@ public class MapsActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
+        RootElement root = new RootElement("http://www.opengis.net/kml/2.2" , "kml");
+        try {
+            Xml.parse(getResources().openRawResource(R.raw.world), Xml.Encoding.UTF_8, root.getContentHandler());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        }
+        ContentHandler a = root.getContentHandler();
+        Log.i("xml", "xml");
+
+
     }
 
     @Override
