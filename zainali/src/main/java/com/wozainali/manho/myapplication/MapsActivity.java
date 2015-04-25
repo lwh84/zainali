@@ -13,6 +13,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.wozainali.manho.myapplication.kml.MyKmlReader;
+import com.wozainali.manho.myapplication.kml.Placemarks;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -23,23 +25,22 @@ import java.io.InputStream;
 public class MapsActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    Placemarks placemarks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
-        RootElement root = new RootElement("http://www.opengis.net/kml/2.2" , "kml");
         try {
-            Xml.parse(getResources().openRawResource(R.raw.world), Xml.Encoding.UTF_8, root.getContentHandler());
+            MyKmlReader myKmlReader = new MyKmlReader();
+            placemarks = myKmlReader.getPlacemarks(R.raw.world, getResources());
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
+
+
+        } catch (Exception e) {
         }
-        ContentHandler a = root.getContentHandler();
-        Log.i("xml", "xml");
+        Log.i("xml", "xml" + placemarks);
 
 
     }
