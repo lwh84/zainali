@@ -3,23 +3,46 @@ package com.wozainali.manho.myapplication;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.sax.RootElement;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.Xml;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.wozainali.manho.myapplication.kml.MyKmlReader;
+import com.wozainali.manho.myapplication.kml.Placemarks;
+
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class MapsActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    Placemarks placemarks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
+        try {
+            MyKmlReader myKmlReader = new MyKmlReader();
+            placemarks = myKmlReader.getPlacemarks(R.raw.world, getResources());
+
+
+
+        } catch (Exception e) {
+        }
+        Log.i("xml", "xml" + placemarks);
+
+
     }
 
     @Override
