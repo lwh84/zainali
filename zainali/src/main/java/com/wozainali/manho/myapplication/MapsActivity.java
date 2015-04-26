@@ -25,24 +25,12 @@ import java.io.InputStream;
 public class MapsActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
-    Placemarks placemarks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
-        try {
-            MyKmlReader myKmlReader = new MyKmlReader();
-            placemarks = myKmlReader.getPlacemarks(R.raw.world, getResources());
-
-
-
-        } catch (Exception e) {
-        }
-        Log.i("xml", "xml" + placemarks);
-
-
     }
 
     @Override
