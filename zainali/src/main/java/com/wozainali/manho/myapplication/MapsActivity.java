@@ -1,5 +1,6 @@
 package com.wozainali.manho.myapplication;
 
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -13,8 +14,11 @@ import android.util.Xml;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.ui.BubbleIconFactory;
+import com.google.maps.android.ui.IconGenerator;
 import com.wozainali.manho.myapplication.kml.MyKmlReader;
 import com.wozainali.manho.myapplication.kml.Placemarks;
 
@@ -95,19 +99,15 @@ public class MapsActivity extends FragmentActivity {
         double latitude = 0;
         double longitude = 0;
 
-        String countryName = "";
-
         if(location!=null) {
             // Getting latitude of the current location
             latitude = location.getLatitude();
 
             // Getting longitude of the current location
             longitude = location.getLongitude();
-
-            LatLng myPosition = new LatLng(latitude, longitude);
-
-            mMap.addMarker(new MarkerOptions().position(myPosition).title("Start"));
         }
+
+        String countryName = "";
 
         Geocoder geocoder = new Geocoder(getBaseContext(), Locale.getDefault());
         List<Address> addresses;
@@ -124,6 +124,10 @@ public class MapsActivity extends FragmentActivity {
 
         Log.i("country", "countryname = " + countryName);
 
+        IconGenerator iconGenerator = new IconGenerator(this);
+        Bitmap iconBitmap = iconGenerator.makeIcon(countryName);
+        LatLng myPosition = new LatLng(latitude, longitude);
+        mMap.addMarker(new MarkerOptions().position(myPosition).icon(BitmapDescriptorFactory.fromBitmap(iconBitmap)));
 
     }
 }
