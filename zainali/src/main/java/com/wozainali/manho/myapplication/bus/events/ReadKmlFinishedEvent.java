@@ -4,14 +4,14 @@ import com.wozainali.manho.myapplication.kml.Placemarks;
 
 public class ReadKmlFinishedEvent {
 
-    private Placemarks placemarks;
+    private Placemarks placemarksWrapper;
 
-    public ReadKmlFinishedEvent(Placemarks placemarks) {
-        this.placemarks = placemarks;
+    public ReadKmlFinishedEvent(Placemarks placemarksWrapper) {
+        this.placemarksWrapper = placemarksWrapper;
     }
 
-    public Placemarks getPlacemarks() {
-        return this.placemarks;
+    public Placemarks getPlacemarksWrapper() {
+        return this.placemarksWrapper;
     }
 
 }
