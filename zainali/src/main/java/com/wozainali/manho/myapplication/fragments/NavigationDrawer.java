@@ -1,27 +1,46 @@
 package com.wozainali.manho.myapplication.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 import com.wozainali.manho.myapplication.R;
+import com.wozainali.manho.myapplication.adapters.CountryAdapter;
 import com.wozainali.manho.myapplication.bus.ZaiNaliBus;
 import com.wozainali.manho.myapplication.bus.events.ReadKmlFinishedEvent;
 
 public class NavigationDrawer extends Fragment {
 
     public ActionBarDrawerToggle drawerToggle;
+    CountryAdapter countryAdapter;
+    RecyclerView recyclerView;
+    TextView loadingView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_navigation,container,false);
+        LinearLayout navigation = (LinearLayout) inflater.inflate(R.layout.fragment_navigation, container, false);
+
+        recyclerView = (RecyclerView) navigation.findViewById(R.id.country_recylcer);
+        loadingView = (TextView) navigation.findViewById(R.id.loading);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        countryAdapter = new CountryAdapter();
+
+        recyclerView.setAdapter(countryAdapter);
+
+        return navigation;
     }
 
     @Override
@@ -60,10 +79,11 @@ public class NavigationDrawer extends Fragment {
 
     @Subscribe
     public void onReadKmlFinishedEvent(ReadKmlFinishedEvent event) {
-        Log.i("NavigationDrawer", "event = " + event.getPlacemarks());
+        Log.i("NavigationDrawer", "event = " + event.getPlacemarksWrapper());
+        countryAdapter.setPlacemarks(event.getPlacemarksWrapper().getPlacemarks());
+        recyclerView.setVisibility(View.VISIBLE);
+        loadingView.setVisibility(View.GONE);
     }
-
-
 
     @Override
     public void onResume() {

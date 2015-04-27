@@ -14,9 +14,9 @@ public class ZaiNaliApplication extends Application {
         Log.i("ZaiNaliApplication", "onCreate");
 
         // start tasks
-        final int worldData = R.raw.world;
-        ReadKmlTask readKmlTask = new ReadKmlTask(worldData, getResources());
-        readKmlTask.execute();
+//        final int worldData = R.raw.world;
+//        ReadKmlTask readKmlTask = new ReadKmlTask(worldData, getResources());
+//        readKmlTask.execute();
 
         GetCurrentCountry getCurrentCountry = new GetCurrentCountry(this);
         getCurrentCountry.execute();

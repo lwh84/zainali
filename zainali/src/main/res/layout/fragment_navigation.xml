@@ -5,8 +5,18 @@
     android:background="@color/white">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Navigation"/>
+        android:id="@+id/loading"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:text="Loading..."/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/country_recylcer"
+        style="@style/Match"
+        android:visibility="gone">
+
+    </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>

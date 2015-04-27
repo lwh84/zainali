@@ -20,6 +20,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
+import com.wozainali.manho.myapplication.asynctasks.ReadKmlTask;
 import com.wozainali.manho.myapplication.fragments.NavigationDrawer;
 
 import java.io.IOException;
@@ -67,6 +68,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // TODO using the getsupportfragmentManager, and supportfragmentManger...
     public void setupNavigationDrawer() {
+        final int worldData = R.raw.world;
+        ReadKmlTask readKmlTask = new ReadKmlTask(worldData, getResources());
+        readKmlTask.execute();
+
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationDrawer = (NavigationDrawer) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         navigationDrawer.setup(drawerLayout);
