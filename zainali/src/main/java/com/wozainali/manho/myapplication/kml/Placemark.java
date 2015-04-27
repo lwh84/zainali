@@ -12,7 +12,7 @@ public class Placemark {
 
     ArrayList<String> coordinates;
 //    ArrayList<Coordinate> coordinatesList;
-    double minLong, maxLong, minLat, maxLat;
+    double minLong = 0, maxLong = 0, minLat = 0 , maxLat = 0;
 
     public void addCoordinates(String coordinates) {
         if (this.coordinates == null) this.coordinates = new ArrayList<String>();

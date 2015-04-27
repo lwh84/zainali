@@ -36,17 +36,8 @@ public class MyKmlReader {
             placemarks = mySaxHandler.getPlacemarksFromParsedData();
 
         } catch (Exception e) {
-            System.out.println("XML Pasing Excpetion = " + e);
+            System.out.println("XML Parsing Exception = " + e);
         }
-
-
-
-//        catch (ParserConfigurationException e) {
-//        } catch (SAXException e) {
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
 
         return placemarks;
     }
