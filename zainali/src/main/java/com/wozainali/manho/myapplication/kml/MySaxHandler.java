@@ -2,6 +2,8 @@ package com.wozainali.manho.myapplication.kml;
 
 import android.util.Log;
 
+import com.wozainali.manho.myapplication.asynctasks.ReadKmlTask;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -15,6 +17,8 @@ public class MySaxHandler extends DefaultHandler {
     private boolean inPlacemark;
     private boolean inName;
     private boolean inCoordinates;
+
+    private ReadKmlTask.ReadFilter readFilter;
 
     StringBuffer stringBuffer;
     String tempString;
@@ -56,7 +60,12 @@ public class MySaxHandler extends DefaultHandler {
         } else if (localName.equals("name")) {
             this.inName = false;
         } else if (localName.equals("coordinates")) {
-            placeMarks.getCurrentPlacemark().addCoordinates(stringBuffer.toString().trim());
+            if (getReadFilter() == ReadKmlTask.ReadFilter.ALL) {
+                String foundCoordinates = stringBuffer.toString().trim();
+                placeMarks.getCurrentPlacemark().addPolygon(getPlacemarkPolygon(foundCoordinates));
+//            placeMarks.getCurrentPlacemark().addCoordinates(stringBuffer.toString().trim());
+            }
+
             this.inCoordinates = false;
         }
     }
@@ -87,22 +96,25 @@ public class MySaxHandler extends DefaultHandler {
 
     }
 
-    private ArrayList<Coordinate> getCoordinatesList(String a) {
-        Scanner scanner = new Scanner(a);
+    private PlaceMarkPolygon getPlacemarkPolygon(String coordinates) {
+        // first make objects of all the coordinates and put them in a list
+        Scanner scanner = new Scanner(coordinates);
         scanner.useDelimiter(" ");
         ArrayList<Coordinate> listOfCoordinates = new ArrayList<>();
-
         while (scanner.hasNext()) {
-//            Coordinate coordinate = new Coordinate();
+            Coordinate coordinate = new Coordinate();
 
-//            setCoordinate(coordinate, scanner.next());
+            setCoordinate(coordinate, scanner.next());
 
-//            listOfCoordinates.add(coordinate);
-
+            listOfCoordinates.add(coordinate);
+//
 //            Log.i("coordinate", "coordinate = " + scanner.next());
         }
 
-        return listOfCoordinates;
+        PlaceMarkPolygon placeMarkPolygon = new PlaceMarkPolygon();
+        placeMarkPolygon.setCoordinates(listOfCoordinates);
+
+        return placeMarkPolygon;
     }
 
     private void setCoordinate(Coordinate coordinate, String coordinatesPair) {
@@ -121,7 +133,13 @@ public class MySaxHandler extends DefaultHandler {
                 setLatitude = true;
             }
         }
+    }
 
+    public ReadKmlTask.ReadFilter getReadFilter() {
+        return readFilter;
+    }
 
+    public void setReadFilter(ReadKmlTask.ReadFilter readFilter) {
+        this.readFilter = readFilter;
     }
 }

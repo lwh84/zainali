@@ -3,6 +3,7 @@ package com.wozainali.manho.myapplication.kml;
 import android.content.res.Resources;
 
 import com.wozainali.manho.myapplication.R;
+import com.wozainali.manho.myapplication.asynctasks.ReadKmlTask.ReadFilter;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -17,7 +18,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 public class MyKmlReader {
 
-    public Placemarks getPlacemarks(int id, Resources resources) {
+    public Placemarks getPlacemarks(int id, Resources resources, ReadFilter readFilter) {
         Placemarks placemarks = null;
 
         try {
@@ -27,6 +28,7 @@ public class MyKmlReader {
             XMLReader xmlReader = saxParser.getXMLReader();
 
             MySaxHandler mySaxHandler = new MySaxHandler();
+            mySaxHandler.setReadFilter(readFilter);
             xmlReader.setContentHandler(mySaxHandler);
 
             xmlReader.parse(new InputSource(resources.openRawResource(id)));
