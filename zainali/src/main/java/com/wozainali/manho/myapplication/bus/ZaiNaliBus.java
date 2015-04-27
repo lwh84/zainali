@@ -1,4 +1,4 @@
-package com.wozainali.manho.myapplication;
+package com.wozainali.manho.myapplication.bus;
 
 import com.squareup.otto.Bus;
 

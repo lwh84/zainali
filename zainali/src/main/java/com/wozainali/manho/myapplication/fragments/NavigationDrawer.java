@@ -5,11 +5,15 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.squareup.otto.Subscribe;
 import com.wozainali.manho.myapplication.R;
+import com.wozainali.manho.myapplication.bus.ZaiNaliBus;
+import com.wozainali.manho.myapplication.bus.events.ReadKmlFinishedEvent;
 
 public class NavigationDrawer extends Fragment {
 
@@ -52,12 +56,24 @@ public class NavigationDrawer extends Fragment {
 
         drawerToggle.syncState();
 
+    }
 
-
-
-
+    @Subscribe
+    public void onReadKmlFinishedEvent(ReadKmlFinishedEvent event) {
+        Log.i("NavigationDrawer", "event = " + event.getPlacemarks());
     }
 
 
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        ZaiNaliBus.getBus().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        ZaiNaliBus.getBus().unregister(this);
+    }
 }

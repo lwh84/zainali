@@ -5,8 +5,13 @@ import java.util.ArrayList;
 public class Placemark {
 
     String name, stringCoords;
+
+
+
+    ArrayList<PlaceMarkPolygon> polygons;
+
     ArrayList<String> coordinates;
-    ArrayList<Coordinate> coordinatesList;
+//    ArrayList<Coordinate> coordinatesList;
     double minLong, maxLong, minLat, maxLat;
 
     public void addCoordinates(String coordinates) {
@@ -30,12 +35,25 @@ public class Placemark {
         this.coordinates = coordinates;
     }
 
-    public ArrayList<Coordinate> getCoordinatesList() {
-        return coordinatesList;
+//    public ArrayList<Coordinate> getCoordinatesList() {
+//        return coordinatesList;
+//    }
+
+//    public void setCoordinatesList(ArrayList<Coordinate> coordinatesList) {
+//        this.coordinatesList = coordinatesList;
+//    }
+
+    public void addPolygon(PlaceMarkPolygon placeMarkPolygon) {
+        if (this.polygons == null) polygons = new ArrayList<>();
+        this.polygons.add(placeMarkPolygon);
     }
 
-    public void setCoordinatesList(ArrayList<Coordinate> coordinatesList) {
-        this.coordinatesList = coordinatesList;
+    public ArrayList<PlaceMarkPolygon> getPolygons() {
+        return polygons;
+    }
+
+    public void setPolygons(ArrayList<PlaceMarkPolygon> polygons) {
+        this.polygons = polygons;
     }
 
     public double getMinLong() {
