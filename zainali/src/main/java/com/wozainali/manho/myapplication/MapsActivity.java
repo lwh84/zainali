@@ -1,6 +1,8 @@
 package com.wozainali.manho.myapplication;
 
+import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.sax.RootElement;
@@ -21,28 +23,18 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
+import java.util.Locale;
 
 public class MapsActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
-    Placemarks placemarks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
-        try {
-            MyKmlReader myKmlReader = new MyKmlReader();
-            placemarks = myKmlReader.getPlacemarks(R.raw.world, getResources());
-
-
-
-        } catch (Exception e) {
-        }
-        Log.i("xml", "xml" + placemarks);
-
-
     }
 
     @Override
@@ -100,19 +92,38 @@ public class MapsActivity extends FragmentActivity {
         // Getting Current Location
         Location location = locationManager.getLastKnownLocation(provider);
 
+        double latitude = 0;
+        double longitude = 0;
+
+        String countryName = "";
+
         if(location!=null) {
             // Getting latitude of the current location
-            double latitude = location.getLatitude();
+            latitude = location.getLatitude();
 
             // Getting longitude of the current location
-            double longitude = location.getLongitude();
-
-            // Creating a LatLng object for the current location
-            LatLng latLng = new LatLng(latitude, longitude);
+            longitude = location.getLongitude();
 
             LatLng myPosition = new LatLng(latitude, longitude);
 
             mMap.addMarker(new MarkerOptions().position(myPosition).title("Start"));
         }
+
+        Geocoder geocoder = new Geocoder(getBaseContext(), Locale.getDefault());
+        List<Address> addresses;
+
+        try {
+            addresses = geocoder.getFromLocation(latitude,longitude,1);
+            if (addresses.size() > 0)
+                System.out.println(addresses.get(0).getLocality());
+            countryName = addresses.get(0).getCountryName();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Log.i("country", "countryname = " + countryName);
+
+
     }
 }

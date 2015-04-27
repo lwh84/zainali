@@ -1,8 +1,13 @@
 package com.wozainali.manho.myapplication.kml;
 
+import android.util.Log;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class MySaxHandler extends DefaultHandler {
 
@@ -12,6 +17,7 @@ public class MySaxHandler extends DefaultHandler {
     private boolean inCoordinates;
 
     StringBuffer stringBuffer;
+    String tempString;
 
     public Placemarks getPlacemarksFromParsedData() {
         return placeMarks;
@@ -36,6 +42,7 @@ public class MySaxHandler extends DefaultHandler {
             this.inName = true;
         } else if (localName.equals("coordinates")) {
             stringBuffer = new StringBuffer();
+//            tempString = "";
             this.inCoordinates = true;
         }
     }
@@ -49,6 +56,7 @@ public class MySaxHandler extends DefaultHandler {
         } else if (localName.equals("name")) {
             this.inName = false;
         } else if (localName.equals("coordinates")) {
+            placeMarks.getCurrentPlacemark().addCoordinates(stringBuffer.toString().trim());
             this.inCoordinates = false;
         }
     }
@@ -59,11 +67,61 @@ public class MySaxHandler extends DefaultHandler {
             Placemark currentPlacemark = placeMarks.getCurrentPlacemark();
             if (this.inName) {
                 currentPlacemark.setName(new String(ch,start,length));
+                Log.i("coordinate", "name of country = " + currentPlacemark.getName());
             } else if (this.inCoordinates) {
-                stringBuffer.append(ch,start,length);
-                currentPlacemark.setCoordinates(stringBuffer.toString());
+                stringBuffer.append(ch, start, length);
+
+//                tempString = new String(ch,start,length);
+//                String coordinates = new String(ch, start, length).trim();
+
+//                currentPlacemark.addCoordinates(tempString.trim());
+
+//                // get list of coordinate objects
+//                ArrayList<Coordinate> b = getCoordinatesList(coordinates);
+//
+//                // put list inside of placemark object
+
+//                currentPlacemark.setCoordinates(coordinates);
             }
         }
+
+    }
+
+    private ArrayList<Coordinate> getCoordinatesList(String a) {
+        Scanner scanner = new Scanner(a);
+        scanner.useDelimiter(" ");
+        ArrayList<Coordinate> listOfCoordinates = new ArrayList<>();
+
+        while (scanner.hasNext()) {
+//            Coordinate coordinate = new Coordinate();
+
+//            setCoordinate(coordinate, scanner.next());
+
+//            listOfCoordinates.add(coordinate);
+
+//            Log.i("coordinate", "coordinate = " + scanner.next());
+        }
+
+        return listOfCoordinates;
+    }
+
+    private void setCoordinate(Coordinate coordinate, String coordinatesPair) {
+        Scanner scanner = new Scanner(coordinatesPair);
+        scanner.useDelimiter(",");
+        boolean setLatitude = false; // set longitude first
+
+        while (scanner.hasNext()) {
+            if (setLatitude) {
+//                setMinMaxLatitude()
+                coordinate.setLatitude(scanner.next());
+                setLatitude = false;
+            } else {
+//                setMinMaxLongitude()
+                coordinate.setLongitude(scanner.next());
+                setLatitude = true;
+            }
+        }
+
 
     }
 }

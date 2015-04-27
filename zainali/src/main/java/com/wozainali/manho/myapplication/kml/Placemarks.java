@@ -8,16 +8,6 @@ public class Placemarks {
     private ArrayList<Placemark> placemarks = new ArrayList<>();
     private Placemark currentPlacemark;
 
-    // I dont think i need this...
-    public String toString() {
-        String string= "";
-        for (Iterator<Placemark> iterator = placemarks.iterator();iterator.hasNext();) {
-            Placemark placemark = iterator.next();
-            string += placemark.getName() + "\n" + placemark.getCoordinates() + "\n\n";
-        }
-        return string;
-    }
-
     public void addCurrentPlacemark() {
         placemarks.add(currentPlacemark);
     }
