@@ -28,5 +28,8 @@ public class ReadKmlTask extends AsyncTask<Void, Void, Placemarks> {
     @Override
     protected void onPostExecute(Placemarks placemarks) {
         Log.i(this.getClass().toString(), "" + placemarks);
+        myKmlReader = null;
+        kmlId = 0;
+        resources = null;
     }
 }

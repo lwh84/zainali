@@ -44,5 +44,6 @@ public class GetCurrentCountry extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String country) {
         Log.i(this.getClass().toString(), "" + country);
+        context = null;
     }
 }
