@@ -15,7 +15,7 @@ public class ReadKmlTask extends AsyncTask<Void, Void, Placemarks> {
     MyKmlReader myKmlReader;
     int kmlId;
     Resources resources;
-    public final ReadFilter readFilter = ReadFilter.TITLE_ONLY;
+    public final ReadFilter readFilter = ReadFilter.ALL;
 
     public enum ReadFilter {
         TITLE_ONLY, ALL;

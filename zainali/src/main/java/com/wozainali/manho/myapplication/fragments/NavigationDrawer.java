@@ -25,10 +25,12 @@ public class NavigationDrawer extends Fragment {
     CountryAdapter countryAdapter;
     RecyclerView recyclerView;
     TextView loadingView;
+    DrawerLayout drawerLayout;
+    LinearLayout navigation;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        LinearLayout navigation = (LinearLayout) inflater.inflate(R.layout.fragment_navigation, container, false);
+        navigation = (LinearLayout) inflater.inflate(R.layout.fragment_navigation, container, false);
 
         recyclerView = (RecyclerView) navigation.findViewById(R.id.country_recylcer);
         loadingView = (TextView) navigation.findViewById(R.id.loading);
@@ -50,6 +52,7 @@ public class NavigationDrawer extends Fragment {
     }
 
     public void setup(DrawerLayout drawerLayout) {
+        this.drawerLayout = drawerLayout;
 
         drawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, R.string.app_name, R.string.app_name) {
             @Override
@@ -95,5 +98,9 @@ public class NavigationDrawer extends Fragment {
     public void onPause() {
         super.onPause();
         ZaiNaliBus.getBus().unregister(this);
+    }
+
+    public void closeDrawer() {
+        drawerLayout.closeDrawer(navigation);
     }
 }

@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -21,9 +23,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 import com.wozainali.manho.myapplication.asynctasks.ReadKmlTask;
+import com.wozainali.manho.myapplication.asynctasks.ShowCountryNameAndBorder;
+import com.wozainali.manho.myapplication.data.PlacemarksManager;
 import com.wozainali.manho.myapplication.fragments.NavigationDrawer;
+import com.wozainali.manho.myapplication.kml.Placemark;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -31,6 +37,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private MapFragment mMap;
     NavigationDrawer navigationDrawer;
+    DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +79,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         ReadKmlTask readKmlTask = new ReadKmlTask(worldData, getResources());
         readKmlTask.execute();
 
-        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationDrawer = (NavigationDrawer) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         navigationDrawer.setup(drawerLayout);
     }
@@ -147,6 +154,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         // Check if we were successful in obtaining the map.
         setUpMap(googleMap);
+    }
+
+    public void searchForCountry(View view) {
+        // get name of country
+        // then search for that one in the list.
+        Log.i("MapsActivity", "view =" + view);
+
+        TextView country = (TextView) view;
+
+        ArrayList<Placemark> placemarksFromManager = PlacemarksManager.getInstance().getPlacemarks();
+        Log.i("country", "countryname = " + country.getText());
+        for (Placemark placemark : placemarksFromManager) {
+            if (placemark.getName().equals(country.getText())) {
+                Log.i("placemark", "this placemark = " + placemark);
+                ShowCountryNameAndBorder showCountryNameAndBorder = new ShowCountryNameAndBorder(placemark);
+                showCountryNameAndBorder.execute();
+            }
+        }
+
+        navigationDrawer.closeDrawer();
     }
 
 }
