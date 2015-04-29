@@ -28,9 +28,27 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <style name="Wrap">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
     <style name="MyActionBar" parent="Theme.AppCompat">
         <item name="android:textColorPrimary">@color/actionbar_text</item>
         <item name="android:textColorPrimaryInverse">@color/actionbar_text</item>
+    </style>
+
+    <style name="TextDefault" parent="Wrap">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="TextForAdapter" parent="TextDefault">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">72dp</item>
+        <item name="android:background">@drawable/button_background</item>
+        <item name="android:clickable">true</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">16dp</item>
     </style>
 
 </resources>

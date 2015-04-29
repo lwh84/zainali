@@ -7,14 +7,9 @@
 
     <TextView
         android:id="@+id/current_location"
-        android:layout_width="match_parent"
-        android:background="@drawable/button_background"
-        android:layout_height="72dp"
-        android:gravity="center_vertical"
-        android:padding="16dp"
-        android:clickable="true"
-
-        android:text="Show current location" />
+        style="@style/TextForAdapter"
+        android:text="Show current location"
+        android:onClick="showCurrentLocation"/>
 
     <View
         android:layout_width="match_parent"
@@ -23,10 +18,7 @@
 
     <TextView
         android:id="@+id/loading"
-        android:layout_width="match_parent"
-        android:layout_height="72dp"
-        android:gravity="center_vertical"
-        android:padding="16dp"
+        style="@style/TextForAdapter"
         android:text="Loading..." />
 
     <android.support.v7.widget.RecyclerView
