@@ -61,20 +61,15 @@ public class MySaxHandler extends DefaultHandler {
             this.inPlacemark = false;
             placeMarks.addCurrentPlacemark();
 
-            Placemark currentPlacemark = placeMarks.getCurrentPlacemark();
-            currentPlacemark.setMinLat(tempMinLatitude);
-            currentPlacemark.setMaxLat(tempMaxLatitude);
-            currentPlacemark.setMinLong(tempMinLongitude);
-            currentPlacemark.setMaxLong(tempMaxLongitude);
+
             placeMarks.setCurrentPlacemark(null);
         } else if (localName.equals("name")) {
             this.inName = false;
         } else if (localName.equals("coordinates")) {
-            if (getReadFilter() == ReadKmlTask.ReadFilter.ALL) {
-                String foundCoordinates = stringBuffer.toString().trim();
-                placeMarks.getCurrentPlacemark().addPolygon(getPlacemarkPolygon(foundCoordinates));
-//            placeMarks.getCurrentPlacemark().addCoordinates(stringBuffer.toString().trim());
-            }
+            String foundCoordinates = stringBuffer.toString().trim();
+//            placeMarks.getCurrentPlacemark().addPolygon(getPlacemarkPolygon(foundCoordinates));
+            placeMarks.getCurrentPlacemark().addCoordinates(stringBuffer.toString().trim());
+
 
             this.inCoordinates = false;
         }
@@ -94,55 +89,7 @@ public class MySaxHandler extends DefaultHandler {
 
     }
 
-    private PlaceMarkPolygon getPlacemarkPolygon(String coordinates) {
-        // first make objects of all the coordinates and put them in a list
-        Scanner scanner = new Scanner(coordinates);
-        scanner.useDelimiter(" ");
-        ArrayList<Coordinate> listOfCoordinates = new ArrayList<>();
-        while (scanner.hasNext()) {
-            Coordinate coordinate = new Coordinate();
 
-            setCoordinate(coordinate, scanner.next());
-
-            listOfCoordinates.add(coordinate);
-//
-//            Log.i("coordinate", "coordinate = " + scanner.next());
-        }
-
-        PlaceMarkPolygon placeMarkPolygon = new PlaceMarkPolygon();
-        placeMarkPolygon.setCoordinates(listOfCoordinates);
-
-        return placeMarkPolygon;
-    }
-
-    private enum CoordinateType {
-        LONGITUDE, LATITUDE, ALTITUDE;
-    }
-
-    private void setCoordinate(Coordinate coordinate, String coordinatesPair) {
-        Scanner scanner = new Scanner(coordinatesPair);
-        scanner.useDelimiter(",");
-        CoordinateType coordinatetype = CoordinateType.LONGITUDE;
-
-        while (scanner.hasNext()) {
-            String currentValue = scanner.next();
-            switch (coordinatetype) {
-                case LONGITUDE:
-                    setMinMaxLongitude(currentValue);
-                    coordinate.setLongitude(currentValue);
-                    coordinatetype = CoordinateType.LATITUDE;
-                    break;
-                case LATITUDE:
-                    setMinMaxLatitude(currentValue);
-                    coordinate.setLatitude(currentValue);
-                    coordinatetype = CoordinateType.ALTITUDE;
-                    break;
-                case ALTITUDE:
-                    coordinatetype = CoordinateType.LONGITUDE;
-                    break;
-            }
-        }
-    }
 
     public ReadKmlTask.ReadFilter getReadFilter() {
         return readFilter;
@@ -152,37 +99,5 @@ public class MySaxHandler extends DefaultHandler {
         this.readFilter = readFilter;
     }
 
-    public void setMinMaxLatitude(String latitude) {
-        double currentValue = 0;
-        try {
-            currentValue  = Double.valueOf(latitude);
-        } catch (Exception e) {
-            Log.i("MySaxHandler", "parsing double failed");
-        }
 
-        if (currentValue < tempMinLatitude || tempMinLatitude == 0) {
-            tempMinLatitude = currentValue;
-        }
-
-        if (currentValue > tempMaxLatitude || tempMaxLatitude == 0 ) {
-            tempMaxLatitude = currentValue;
-        }
-
-    }
-
-    public void setMinMaxLongitude(String longitude) {
-        double currentValue = 0;
-        try {
-            currentValue  = Double.valueOf(longitude);
-        } catch (Exception e) {
-            Log.i("MySaxHandler", "parsing double failed");
-        }
-        if (currentValue < tempMinLongitude || tempMinLongitude == 0) {
-            tempMinLongitude = currentValue;
-        }
-
-        if (currentValue > tempMaxLongitude || tempMaxLongitude == 0 ) {
-            tempMaxLongitude = currentValue;
-        }
-    }
 }

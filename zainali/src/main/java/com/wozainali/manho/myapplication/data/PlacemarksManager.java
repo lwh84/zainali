@@ -2,6 +2,8 @@ package com.wozainali.manho.myapplication.data;
 
 import android.location.Location;
 
+import com.squareup.otto.Subscribe;
+import com.wozainali.manho.myapplication.bus.events.ReadKmlFinishedEvent;
 import com.wozainali.manho.myapplication.kml.Placemark;
 
 import java.util.ArrayList;
@@ -18,13 +20,17 @@ public class PlacemarksManager {
     private ArrayList<String> countryList; // only used by the adapter
     private ArrayList<Placemark> placemarks;
 
-
-
     public static PlacemarksManager getInstance() {
         return placemarksManager;
     }
 
+    @Subscribe
+    public void onReadKmlFinished(ReadKmlFinishedEvent event) {
+        placemarks = event.placemarksWrapper.getPlacemarks();
+    }
 
-
+    public ArrayList<Placemark> getPlacemarks() {
+        return placemarks;
+    }
 
 }

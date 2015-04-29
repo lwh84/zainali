@@ -1,6 +1,8 @@
 package com.wozainali.manho.myapplication;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -11,19 +13,37 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.ui.IconGenerator;
+import com.squareup.otto.Subscribe;
 import com.wozainali.manho.myapplication.asynctasks.ReadKmlTask;
+import com.wozainali.manho.myapplication.asynctasks.ShowCountryNameAndBorder;
+import com.wozainali.manho.myapplication.bus.ZaiNaliBus;
+import com.wozainali.manho.myapplication.bus.events.AddMarkerEvent;
+import com.wozainali.manho.myapplication.bus.events.DrawPolygonsEvent;
+import com.wozainali.manho.myapplication.bus.events.ZoomToPointEvent;
+import com.wozainali.manho.myapplication.data.PlacemarksManager;
 import com.wozainali.manho.myapplication.fragments.NavigationDrawer;
+import com.wozainali.manho.myapplication.kml.PlaceMarkPolygon;
+import com.wozainali.manho.myapplication.kml.Placemark;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -31,6 +51,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private MapFragment mMap;
     NavigationDrawer navigationDrawer;
+    DrawerLayout drawerLayout;
+    GoogleMap googleMap;
+    Marker currentMarker;
+    ArrayList<Polyline> currentPolylines = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +70,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
+        ZaiNaliBus.getBus().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ZaiNaliBus.getBus().unregister(this);
     }
 
     private void setUpMapIfNeeded() {
@@ -72,7 +103,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         ReadKmlTask readKmlTask = new ReadKmlTask(worldData, getResources());
         readKmlTask.execute();
 
-        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationDrawer = (NavigationDrawer) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         navigationDrawer.setup(drawerLayout);
     }
@@ -147,6 +178,90 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         // Check if we were successful in obtaining the map.
         setUpMap(googleMap);
+        this.googleMap = googleMap;
     }
+
+    public void searchForCountry(View view) {
+        // get name of country
+        // then search for that one in the list.
+        Log.i("MapsActivity", "view =" + view);
+
+        TextView country = (TextView) view;
+
+        ArrayList<Placemark> placemarksFromManager = PlacemarksManager.getInstance().getPlacemarks();
+        Log.i("country", "countryname = " + country.getText());
+        for (Placemark placemark : placemarksFromManager) {
+            if (placemark.getName().equals(country.getText())) {
+                Log.i("placemark", "this placemark = " + placemark);
+                ShowCountryNameAndBorder showCountryNameAndBorder = new ShowCountryNameAndBorder(placemark);
+                showCountryNameAndBorder.execute();
+            }
+        }
+
+        navigationDrawer.closeDrawer();
+    }
+
+    // SUBSCRIBE METHODS
+
+    @Subscribe
+    public void onZoomtoPointEvent(ZoomToPointEvent event) {
+        Log.i("mapsactivity", "zoomtopoint = " + event);
+        LatLng southWest = new LatLng(event.getMinLat(), event.getMinLong());
+        LatLng northEast = new LatLng(event.getMaxLat(), event.getMaxLong());
+
+        LatLngBounds pointOfInterest = new LatLngBounds(southWest,northEast);
+
+        Resources r = getResources();
+        float padding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, r.getDisplayMetrics());
+
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(pointOfInterest,Math.round(padding)));
+
+    }
+
+    @Subscribe
+    public void onAddMarkerEvent(AddMarkerEvent event) {
+        Log.i("mapsActivity", "addmarker " + event);
+
+        IconGenerator iconGenerator = new IconGenerator(this);
+        Bitmap iconBitmap = iconGenerator.makeIcon(event.name);
+        LatLng myPosition = new LatLng(event.latitude, event.longitude);
+        if (currentMarker != null) currentMarker.remove();
+        currentMarker = googleMap.addMarker(new MarkerOptions().position(myPosition).icon(BitmapDescriptorFactory.fromBitmap(iconBitmap)));
+    }
+
+    @Subscribe
+    public  void onDrawPolygonsEvent(DrawPolygonsEvent event) {
+        Log.i("mapsActivity", "drawpolygons " + event);
+
+        for (PlaceMarkPolygon placemarkPolygon : event.polygons) {
+            ArrayList<Double> latitudes = placemarkPolygon.getLatitudes();
+            ArrayList<Double> longitudes = placemarkPolygon.getLongitudes();
+            ArrayList<LatLng> points = new ArrayList<>();
+
+            for (int i = 0 ; i < latitudes.size(); i++) {
+                points.add(new LatLng(latitudes.get(i), longitudes.get(i)));
+            }
+
+            if (currentPolylines.size() != 0) {
+                for (Polyline polyline : currentPolylines) {
+                    polyline.remove();
+                    currentPolylines.remove(polyline);
+                }
+            }
+
+            Polyline currentPolyline = googleMap.addPolyline(new PolylineOptions()
+                    .addAll(points)
+                    .width(5)
+                    .color(Color.RED));
+
+            currentPolylines.add(currentPolyline);
+
+
+        }
+    }
+
+
+
+
 
 }
