@@ -48,7 +48,7 @@ public class ShowCountryNameAndBorder extends AsyncTask <Void, Void, Placemark> 
     }
 
     public void showCountryNameAndBorder(double longitude, double latitude) {
-
+        Log.i("showcountry", "from geolocation" + longitude + " " + latitude);
         // get the list of countries
 
         // for every placemark check min max lat long
@@ -88,16 +88,18 @@ public class ShowCountryNameAndBorder extends AsyncTask <Void, Void, Placemark> 
 
     @Override
     protected void onPostExecute(Placemark placemark) {
-        Bus bus = ZaiNaliBus.getBus();
+        if (placemark != null) {
+            Bus bus = ZaiNaliBus.getBus();
 
-        // send event to zoom in and animate to point
-        bus.post(new ZoomToPointEvent(placemark));
+            // send event to zoom in and animate to point
+            bus.post(new ZoomToPointEvent(placemark));
 
-        // send event to addmarker on that point with name
-        bus.post(new AddMarkerEvent(placemark));
+            // send event to addmarker on that point with name
+            bus.post(new AddMarkerEvent(placemark));
 
-        // send events to draw polylines
-        bus.post(new DrawPolygonsEvent(placemark.getPolygons()));
+            // send events to draw polylines
+            bus.post(new DrawPolygonsEvent(placemark.getPolygons()));
+        }
     }
 
     public void convert(ArrayList<String> coordinatesList, Placemark placemark) {

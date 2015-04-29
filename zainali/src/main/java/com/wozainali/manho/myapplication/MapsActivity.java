@@ -146,7 +146,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             // Getting longitude of the current location
             longitude = location.getLongitude();
+
+            ShowCountryNameAndBorder showCountryNameAndBorder = new ShowCountryNameAndBorder(longitude,latitude);
+            showCountryNameAndBorder.execute();
+        } else {
+            // snackbar to let user know, that location not found and check settings...
         }
+
+
+
+
+
 
         String countryName = "";
 
@@ -233,6 +243,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public  void onDrawPolygonsEvent(DrawPolygonsEvent event) {
         Log.i("mapsActivity", "drawpolygons " + event);
 
+        for (Polyline polyline : currentPolylines) {
+            polyline.remove();
+            currentPolylines.remove(polyline);
+        }
+
+
         for (PlaceMarkPolygon placemarkPolygon : event.polygons) {
             ArrayList<Double> latitudes = placemarkPolygon.getLatitudes();
             ArrayList<Double> longitudes = placemarkPolygon.getLongitudes();
@@ -242,12 +258,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 points.add(new LatLng(latitudes.get(i), longitudes.get(i)));
             }
 
-            if (currentPolylines.size() != 0) {
-                for (Polyline polyline : currentPolylines) {
-                    polyline.remove();
-                    currentPolylines.remove(polyline);
-                }
-            }
+
 
             Polyline currentPolyline = googleMap.addPolyline(new PolylineOptions()
                     .addAll(points)
