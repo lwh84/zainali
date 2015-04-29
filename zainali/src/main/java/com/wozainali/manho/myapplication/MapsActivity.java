@@ -125,62 +125,37 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
 
         googleMap.setMyLocationEnabled(true);
-//      // Getting LocationManager object from System Service LOCATION_SERVICE
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-        // Creating a criteria object to retrieve provider
-        Criteria criteria = new Criteria();
-
-        // Getting the name of the best provider
-        String provider = locationManager.getBestProvider(criteria, true);
-
-        // Getting Current Location
-        Location location = locationManager.getLastKnownLocation(provider);
-
-        double latitude = 0;
-        double longitude = 0;
-
-        if(location!=null) {
-            // Getting latitude of the current location
-            latitude = location.getLatitude();
-
-            // Getting longitude of the current location
-            longitude = location.getLongitude();
-
-            ShowCountryNameAndBorder showCountryNameAndBorder = new ShowCountryNameAndBorder(longitude,latitude);
-            showCountryNameAndBorder.execute();
-        } else {
-            // snackbar to let user know, that location not found and check settings...
-        }
+        showCurrentLocation(null);
 
 
 
 
 
 
-        String countryName = "";
 
-        Geocoder geocoder = new Geocoder(getBaseContext(), Locale.getDefault());
-        List<Address> addresses;
-
-        try {
-            addresses = geocoder.getFromLocation(latitude,longitude,1);
-            if (addresses.size() > 0) {
-                System.out.println(addresses.get(0).getLocality());
-                countryName = addresses.get(0).getCountryName();
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.i("mapsActivity", "no addresses = " + e);
-        }
-
-        Log.i("country", "countryname = " + countryName);
-
-        IconGenerator iconGenerator = new IconGenerator(this);
-        Bitmap iconBitmap = iconGenerator.makeIcon(countryName);
-        LatLng myPosition = new LatLng(latitude, longitude);
-        googleMap.addMarker(new MarkerOptions().position(myPosition).icon(BitmapDescriptorFactory.fromBitmap(iconBitmap)));
+//        String countryName = "";
+//
+//        Geocoder geocoder = new Geocoder(getBaseContext(), Locale.getDefault());
+//        List<Address> addresses;
+//
+//        try {
+//            addresses = geocoder.getFromLocation(latitude,longitude,1);
+//            if (addresses.size() > 0) {
+//                System.out.println(addresses.get(0).getLocality());
+//                countryName = addresses.get(0).getCountryName();
+//            }
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            Log.i("mapsActivity", "no addresses = " + e);
+//        }
+//
+//        Log.i("country", "countryname = " + countryName);
+//
+//        IconGenerator iconGenerator = new IconGenerator(this);
+//        Bitmap iconBitmap = iconGenerator.makeIcon(countryName);
+//        LatLng myPosition = new LatLng(latitude, longitude);
+//        googleMap.addMarker(new MarkerOptions().position(myPosition).icon(BitmapDescriptorFactory.fromBitmap(iconBitmap)));
 
     }
 
@@ -211,8 +186,37 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         navigationDrawer.closeDrawer();
     }
 
-    // SUBSCRIBE METHODS
+    public void showCurrentLocation(View view){
+        // Getting LocationManager object from System Service LOCATION_SERVICE
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
+        // Creating a criteria object to retrieve provider
+        Criteria criteria = new Criteria();
+
+        // Getting the name of the best provider
+        String provider = locationManager.getBestProvider(criteria, true);
+
+        // Getting Current Location
+        Location location = locationManager.getLastKnownLocation(provider);
+
+        double latitude = 0;
+        double longitude = 0;
+
+        if(location!=null) {
+            // Getting latitude of the current location
+            latitude = location.getLatitude();
+
+            // Getting longitude of the current location
+            longitude = location.getLongitude();
+
+            ShowCountryNameAndBorder showCountryNameAndBorder = new ShowCountryNameAndBorder(longitude,latitude);
+            showCountryNameAndBorder.execute();
+        } else {
+            // snackbar to let user know, that location can not found and check settings...
+        }
+    }
+
+    // SUBSCRIBE METHODS
     @Subscribe
     public void onZoomtoPointEvent(ZoomToPointEvent event) {
         Log.i("mapsactivity", "zoomtopoint = " + event);
@@ -245,9 +249,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         for (Polyline polyline : currentPolylines) {
             polyline.remove();
-            currentPolylines.remove(polyline);
         }
 
+        currentPolylines = new ArrayList<>();
 
         for (PlaceMarkPolygon placemarkPolygon : event.polygons) {
             ArrayList<Double> latitudes = placemarkPolygon.getLatitudes();

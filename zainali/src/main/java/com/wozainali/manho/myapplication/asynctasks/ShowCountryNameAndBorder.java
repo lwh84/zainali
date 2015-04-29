@@ -1,13 +1,21 @@
 package com.wozainali.manho.myapplication.asynctasks;
 
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.maps.android.PolyUtil;
 import com.squareup.otto.Bus;
 import com.wozainali.manho.myapplication.bus.ZaiNaliBus;
 import com.wozainali.manho.myapplication.bus.events.AddMarkerEvent;
 import com.wozainali.manho.myapplication.bus.events.DrawPolygonsEvent;
 import com.wozainali.manho.myapplication.bus.events.ZoomToPointEvent;
+import com.wozainali.manho.myapplication.data.PlacemarksManager;
 import com.wozainali.manho.myapplication.kml.PlaceMarkPolygon;
 import com.wozainali.manho.myapplication.kml.Placemark;
 
@@ -49,29 +57,67 @@ public class ShowCountryNameAndBorder extends AsyncTask <Void, Void, Placemark> 
 
     public void showCountryNameAndBorder(double longitude, double latitude) {
         Log.i("showcountry", "from geolocation" + longitude + " " + latitude);
-        // get the list of countries
+
+        ArrayList<Placemark> placemarks = PlacemarksManager.getInstance().getPlacemarks();
+
+        if (placemarks == null) return;
 
         // for every placemark check min max lat long
+        for (Placemark currentPlacemark : placemarks) {
+            convert(currentPlacemark.getCoordinatesList(), currentPlacemark);
 
-        // if longitude < min long return
-        // if longitude > max long return
-        // if latitude < min lat return
-        // if longitude > max lat return
+            if (longitude > currentPlacemark.getMinLong() &&
+                    longitude < currentPlacemark.getMaxLong() &&
+                    latitude > currentPlacemark.getMinLat() &&
+                    latitude < currentPlacemark.getMaxLat()) {
+                Log.i("placemark", "found one");
+
+                if (checkWithPolygon(currentPlacemark, latitude, longitude)) {
+                    showCountryNameAndBorder(currentPlacemark);
+                    Log.i("placemark", "showcountryand borders!!!");
+                } else {
+                    Log.i("placemark", "no match");
+                }
+
+            }
+
+            tempMinLatitude = 0;
+            tempMaxLatitude = 0;
+            tempMinLongitude = 0;
+            tempMaxLongitude = 0;
+        }
+
+
+
         // if still here
         // get polygons
-        // for every polygon, make polygon object Double.
-        // Path2D path = new Path2D.Double();
-//        path.moveTo(valoresX[0], valoresY[0]);
-//        for(int i = 1; i < valoresX.length; ++i) {
-//            path.lineTo(valoresX[i], valoresY[i]);
-//        }
-//        path.closePath();
-        //
-        // path.contains(points) then check point in polygon.
+
 
         // when placemark found getname and getpolygons, get min and max lat and long
 
         // put all needed info in placemarkpolygon and go to postexecute and sent events
+
+    }
+
+    public boolean checkWithPolygon(Placemark placemark, double latitudeToCheck, double longitudeToCheck) {
+        for (PlaceMarkPolygon placeMarkPolygon : placemark.getPolygons()) {
+            Log.i("placemark", "placemarkpolygon");
+
+//            PolygonOptions polygonOptions = new PolygonOptions();
+
+            ArrayList<LatLng> foundCountryPolygon = new ArrayList<>();
+
+            for (int i = 0 ; i < placeMarkPolygon.getLongitudes().size(); i++) {
+                Log.i("polygon", "making the list");
+                foundCountryPolygon.add(new LatLng(placeMarkPolygon.getLatitudes().get(i),
+                                                placeMarkPolygon.getLongitudes().get(i)));
+            }
+
+            return PolyUtil.containsLocation(new LatLng(latitudeToCheck, longitudeToCheck),foundCountryPolygon, true);
+
+        }
+
+        return false;
 
     }
 

@@ -3,6 +3,7 @@ package com.wozainali.manho.myapplication.data;
 import android.location.Location;
 
 import com.squareup.otto.Subscribe;
+import com.wozainali.manho.myapplication.asynctasks.ReadKmlTask;
 import com.wozainali.manho.myapplication.bus.events.ReadKmlFinishedEvent;
 import com.wozainali.manho.myapplication.kml.Placemark;
 
@@ -30,6 +31,7 @@ public class PlacemarksManager {
     }
 
     public ArrayList<Placemark> getPlacemarks() {
+        // maybe set a null check here
         return placemarks;
     }
 
