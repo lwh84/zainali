@@ -82,8 +82,8 @@ public class NavigationDrawer extends Fragment {
 
     @Subscribe
     public void onReadKmlFinishedEvent(ReadKmlFinishedEvent event) {
-        Log.i("NavigationDrawer", "event = " + event.getPlacemarksWrapper());
-        countryAdapter.setPlacemarks(event.getPlacemarksWrapper().getPlacemarks());
+        Log.i("NavigationDrawer", "event = " + event.placemarksWrapper);
+        countryAdapter.setPlacemarks(event.placemarksWrapper.getPlacemarks());
         recyclerView.setVisibility(View.VISIBLE);
         loadingView.setVisibility(View.GONE);
     }

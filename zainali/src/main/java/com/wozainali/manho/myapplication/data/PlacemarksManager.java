@@ -26,7 +26,7 @@ public class PlacemarksManager {
 
     @Subscribe
     public void onReadKmlFinished(ReadKmlFinishedEvent event) {
-        placemarks = event.getPlacemarksWrapper().getPlacemarks();
+        placemarks = event.placemarksWrapper.getPlacemarks();
     }
 
     public ArrayList<Placemark> getPlacemarks() {

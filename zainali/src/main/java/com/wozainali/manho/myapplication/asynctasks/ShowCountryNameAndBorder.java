@@ -3,13 +3,18 @@ package com.wozainali.manho.myapplication.asynctasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.squareup.otto.Bus;
+import com.wozainali.manho.myapplication.bus.ZaiNaliBus;
+import com.wozainali.manho.myapplication.bus.events.AddMarkerEvent;
+import com.wozainali.manho.myapplication.bus.events.DrawPolygonsEvent;
+import com.wozainali.manho.myapplication.bus.events.ZoomToPointEvent;
 import com.wozainali.manho.myapplication.kml.PlaceMarkPolygon;
 import com.wozainali.manho.myapplication.kml.Placemark;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class ShowCountryNameAndBorder extends AsyncTask <Void, Void, PlaceMarkPolygon> {
+public class ShowCountryNameAndBorder extends AsyncTask <Void, Void, Placemark> {
 
     private Placemark placemark;
     private double longitude, latitude;
@@ -25,7 +30,7 @@ public class ShowCountryNameAndBorder extends AsyncTask <Void, Void, PlaceMarkPo
     }
 
 
-    public void showCountryNameAndBorder(Placemark placemark) {
+    public Placemark showCountryNameAndBorder(Placemark placemark) {
         // get polygons Strings
         ArrayList<String> coordinatesList = placemark.getCoordinatesList();
 
@@ -39,6 +44,7 @@ public class ShowCountryNameAndBorder extends AsyncTask <Void, Void, PlaceMarkPo
         // get center of country
 
         // fill placemarkpolygon with info and sent to postexecute
+        return placemark;
     }
 
     public void showCountryNameAndBorder(double longitude, double latitude) {
@@ -70,23 +76,28 @@ public class ShowCountryNameAndBorder extends AsyncTask <Void, Void, PlaceMarkPo
     }
 
     @Override
-    protected PlaceMarkPolygon doInBackground(Void... params) {
+    protected Placemark doInBackground(Void... params) {
         if (placemark != null) {
             showCountryNameAndBorder(placemark);
         } else {
             showCountryNameAndBorder(longitude, latitude);
         }
 
-        return null;
+        return placemark;
     }
 
     @Override
-    protected void onPostExecute(PlaceMarkPolygon placeMarkPolygon) {
+    protected void onPostExecute(Placemark placemark) {
+        Bus bus = ZaiNaliBus.getBus();
+
         // send event to zoom in and animate to point
+        bus.post(new ZoomToPointEvent(placemark));
 
         // send event to addmarker on that point with name
+        bus.post(new AddMarkerEvent(placemark));
 
         // send events to draw polylines
+        bus.post(new DrawPolygonsEvent(placemark.getPolygons()));
     }
 
     public void convert(ArrayList<String> coordinatesList, Placemark placemark) {
