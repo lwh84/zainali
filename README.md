@@ -21,8 +21,8 @@ This was my first time, working with Google maps and for reading out a file. A l
 
 ## What I would like to fix
 I guess I'm not fixing anything anymore, but these are the things that I would really like to fix now:
-- slowness, I guess I need to slack down on object creation and use something persistant for my created objects.
-- styling, matbe I would spice it up a bit more with Material style. Like using the Floating Action Button, make a cardview. But also using more of the styles.xml and re-use styles for my views.
+- Make it faster, I guess I need to slack down on object creation and use something persistant for my created objects.
+- styling, maybe I would spice it up a bit more with Material style. Like using the Floating Action Button, make a cardview. But also using more of the styles.xml and re-use styles for my views.
 - Clear up the code, seperating the logic from the layout. It's still a bit messy for my taste. 
 
 
