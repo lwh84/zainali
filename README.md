@@ -15,7 +15,7 @@ When it finds your country, 3 things will happen:
 - puts borders of the country on the map
 
 ## The process
-This was my first time, working with Google maps and for reading out a file. A lot of time went into understanding the mechanics behind. For example, understanding the KML, reading out only the things that you need and then convert them into objects that you need. I had a lot of trouble with:
+This was my first time, working with Google maps and for reading out a file. A lot of time went into understanding the mechanics behind it. For example, understanding the KML, reading out only the things that you need and then convert them into objects that you need. I had a lot of trouble with:
 - finding an algorithm that finds a point in the polygon
 - slowness, it just takes a lot of time to find and check the point.
 
