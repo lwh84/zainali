@@ -28,6 +28,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.ui.IconGenerator;
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.SnackbarManager;
 import com.squareup.otto.Subscribe;
 import com.wozainali.manho.myapplication.asynctasks.ReadKmlTask;
 import com.wozainali.manho.myapplication.asynctasks.ShowCountryNameAndBorder;
@@ -169,7 +171,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             loadingLayout.setVisibility(View.VISIBLE);
             ShowCountryNameAndBorder showCountryNameAndBorder = new ShowCountryNameAndBorder(longitude,latitude, getBaseContext());
             showCountryNameAndBorder.execute();
+        } else {
+            SnackbarManager.show(Snackbar.with(this).text("Can't find location, check your settings").duration(Snackbar.SnackbarDuration.LENGTH_LONG));
         }
+
 
         navigationDrawer.closeDrawer();
     }
