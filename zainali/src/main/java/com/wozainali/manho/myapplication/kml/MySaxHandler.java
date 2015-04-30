@@ -1,15 +1,10 @@
 package com.wozainali.manho.myapplication.kml;
 
-import android.util.Log;
-
 import com.wozainali.manho.myapplication.asynctasks.ReadKmlTask;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-
-import java.util.ArrayList;
-import java.util.Scanner;
 
 public class MySaxHandler extends DefaultHandler {
 
@@ -21,11 +16,7 @@ public class MySaxHandler extends DefaultHandler {
     private ReadKmlTask.ReadFilter readFilter;
 
     StringBuffer stringBuffer;
-    String tempString;
-    double tempMinLatitude;
-    double tempMaxLatitude;
-    double tempMinLongitude;
-    double tempMaxLongitude;
+
 
     public Placemarks getPlacemarksFromParsedData() {
         return placeMarks;
@@ -50,7 +41,6 @@ public class MySaxHandler extends DefaultHandler {
             this.inName = true;
         } else if (localName.equals("coordinates")) {
             stringBuffer = new StringBuffer();
-//            tempString = "";
             this.inCoordinates = true;
         }
     }
@@ -66,11 +56,7 @@ public class MySaxHandler extends DefaultHandler {
         } else if (localName.equals("name")) {
             this.inName = false;
         } else if (localName.equals("coordinates")) {
-            String foundCoordinates = stringBuffer.toString().trim();
-//            placeMarks.getCurrentPlacemark().addPolygon(getPlacemarkPolygon(foundCoordinates));
             placeMarks.getCurrentPlacemark().addCoordinates(stringBuffer.toString().trim());
-
-
             this.inCoordinates = false;
         }
     }
@@ -81,15 +67,11 @@ public class MySaxHandler extends DefaultHandler {
             Placemark currentPlacemark = placeMarks.getCurrentPlacemark();
             if (this.inName) {
                 currentPlacemark.setName(new String(ch,start,length));
-                Log.i("coordinate", "name of country = " + currentPlacemark.getName());
             } else if (this.inCoordinates) {
                 stringBuffer.append(ch, start, length);
             }
         }
-
     }
-
-
 
     public ReadKmlTask.ReadFilter getReadFilter() {
         return readFilter;

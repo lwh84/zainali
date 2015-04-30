@@ -9,8 +9,6 @@ import android.widget.TextView;
 import com.wozainali.manho.myapplication.R;
 import com.wozainali.manho.myapplication.kml.Placemark;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 public class CountryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

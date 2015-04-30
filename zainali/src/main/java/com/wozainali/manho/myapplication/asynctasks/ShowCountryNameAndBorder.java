@@ -4,10 +4,7 @@ import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.PolyUtil;
 import com.squareup.otto.Bus;
 import com.wozainali.manho.myapplication.bus.ZaiNaliBus;
 import com.wozainali.manho.myapplication.bus.events.AddMarkerEvent;
@@ -130,63 +127,14 @@ public class ShowCountryNameAndBorder extends AsyncTask <Void, Void, Placemark> 
         for (PlaceMarkPolygon placeMarkPolygon : placemark.getPolygons()) {
 
             for (int i = 0; i < placeMarkPolygon.getLongitudes().size(); i++) {
-                Log.i("polygon", "making the list");
                 listOfLatLngs.add(new ZaiNaliLatLng(placeMarkPolygon.getLatitudes().get(i),
                         placeMarkPolygon.getLongitudes().get(i)));
             }
 
             test = zaiNaliPolygon.PointIsInRegion(latitudeToCheck,longitudetoCheck,listOfLatLngs);
-            Log.i("boolean", "test = " + test);
         }
 
         return test;
-    }
-
-    public boolean checkWithPolygon(Placemark placemark, double latitudeToCheck, double longitudeToCheck) {
-//        tempMinLatitude = 0;
-//        tempMaxLatitude = 0;
-//        tempMinLongitude = 0;
-//        tempMaxLongitude = 0;
-//        convert(placemark.getCoordinatesList(), placemark);
-//
-//        ArrayList<ZaiNaliLatLng> listOfLatLngs = new ArrayList<>();
-//
-//        ZaiNaliPolygon zaiNaliPolygon = new ZaiNaliPolygon();
-//
-//
-//        for (PlaceMarkPolygon placeMarkPolygon : placemark.getPolygons()) {
-//
-//            for (int i = 0; i < placeMarkPolygon.getLongitudes().size(); i++) {
-//                Log.i("polygon", "making the list");
-//                listOfLatLngs.add(new ZaiNaliLatLng(placeMarkPolygon.getLatitudes().get(i),
-//                        placeMarkPolygon.getLongitudes().get(i)));
-//            }
-//
-//            boolean test = zaiNaliPolygon.PointIsInRegion(latitude,longitude,listOfLatLngs);
-//            Log.i("boolean", "test = " + test);
-//        }
-//
-//
-//
-//        for (PlaceMarkPolygon placeMarkPolygon : placemark.getPolygons()) {
-//            Log.i("placemark", "placemarkpolygon");
-//
-////            PolygonOptions polygonOptions = new PolygonOptions();
-//
-//            ArrayList<LatLng> foundCountryPolygon = new ArrayList<>();
-//
-//            for (int i = 0 ; i < placeMarkPolygon.getLongitudes().size(); i++) {
-//                Log.i("polygon", "making the list");
-//                foundCountryPolygon.add(new LatLng(placeMarkPolygon.getLatitudes().get(i),
-//                                                placeMarkPolygon.getLongitudes().get(i)));
-//            }
-//
-//            return PolyUtil.containsLocation(new LatLng(latitudeToCheck, longitudeToCheck),foundCountryPolygon, true);
-//
-//        }
-
-        return false;
-
     }
 
     @Override
@@ -196,7 +144,6 @@ public class ShowCountryNameAndBorder extends AsyncTask <Void, Void, Placemark> 
         } else {
             showCountryNameAndBorder(longitude, latitude);
         }
-
         return placemark;
     }
 
@@ -271,17 +218,14 @@ public class ShowCountryNameAndBorder extends AsyncTask <Void, Void, Placemark> 
             try {
                 dCurrentValue  = Double.valueOf(sCurrentValue);
             } catch (Exception e) {
-                Log.i("MySaxHandler", "parsing double failed");
             }
 
             switch (coordinatetype) {
                 case LONGITUDE:
-//                    setMinMaxLongitude(dCurrentValue);
                     placeMarkPolygon.addLongitude(dCurrentValue);
                     coordinatetype = CoordinateType.LATITUDE;
                     break;
                 case LATITUDE:
-//                    setMinMaxLatitude(dCurrentValue);
                     placeMarkPolygon.addLatitude(dCurrentValue);
                     coordinatetype = CoordinateType.ALTITUDE;
                     break;
@@ -291,26 +235,5 @@ public class ShowCountryNameAndBorder extends AsyncTask <Void, Void, Placemark> 
             }
         }
     }
-
-//    public void setMinMaxLatitude(double currentValue) {
-//        if (currentValue < tempMinLatitude || tempMinLatitude == 0) {
-//            tempMinLatitude = currentValue;
-//        }
-//
-//        if (currentValue > tempMaxLatitude || tempMaxLatitude == 0 ) {
-//            tempMaxLatitude = currentValue;
-//        }
-//    }
-//
-//    public void setMinMaxLongitude(double currentValue) {
-//        if (currentValue < tempMinLongitude || tempMinLongitude == 0) {
-//            tempMinLongitude = currentValue;
-//        }
-//
-//        if (currentValue > tempMaxLongitude || tempMaxLongitude == 0 ) {
-//            tempMaxLongitude = currentValue;
-//        }
-//    }
-
 
 }

@@ -196,6 +196,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         IconGenerator iconGenerator = new IconGenerator(this);
         Bitmap iconBitmap = iconGenerator.makeIcon(event.name);
         LatLng myPosition = new LatLng(event.latitude, event.longitude);
+
         if (currentMarker != null) currentMarker.remove();
         currentMarker = googleMap.addMarker(new MarkerOptions().position(myPosition).icon(BitmapDescriptorFactory.fromBitmap(iconBitmap)));
     }
@@ -230,7 +231,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Subscribe
     public void onCurrentNumber(final ShowCurrentNumberEvent event) {
-        // not so nice part
+        // not so nice part, event is coming from non-main thread
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

@@ -30,7 +30,6 @@ public class PlacemarksManager {
     @Subscribe
     public void onReadKmlFinished(ReadKmlFinishedEvent event) {
         placemarks = event.placemarksWrapper.getPlacemarks();
-        ZaiNaliBus.getBus().post(new TotalCountriesEvent(placemarks.size()));
     }
 
     public ArrayList<Placemark> getPlacemarks() {

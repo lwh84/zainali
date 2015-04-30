@@ -1,9 +1,12 @@
 package com.wozainali.manho.myapplication.data;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 
+/**
+ * I want to thank the person on stackoverflow:
+ * http://stackoverflow.com/questions/18486284/android-geofencing-polygon/18486861#18486861
+ * I could not do this without him/her
+ */
 public class ZaiNaliPolygon {
 
     public boolean PointIsInRegion(double x, double y, ArrayList<ZaiNaliLatLng> thePath) {
