@@ -4,18 +4,8 @@ import java.util.ArrayList;
 
 public class PlaceMarkPolygon {
 
-    private ArrayList<Coordinate> coordinates;
-
     private ArrayList<Double> longitudes;
     private ArrayList<Double> latitudes;
-
-    public ArrayList<Coordinate> getCoordinates() {
-        return coordinates;
-    }
-
-    public void setCoordinates(ArrayList<Coordinate> coordinates) {
-        this.coordinates = coordinates;
-    }
 
     public ArrayList<Double> getLongitudes() {
         return longitudes;

@@ -17,6 +17,7 @@ public class ReadKmlTask extends AsyncTask<Void, Void, Placemarks> {
     Resources resources;
     public final ReadFilter readFilter = ReadFilter.ALL;
 
+    // TODO: make this filter more useful
     public enum ReadFilter {
         TITLE_ONLY, ALL;
     }
@@ -35,11 +36,6 @@ public class ReadKmlTask extends AsyncTask<Void, Void, Placemarks> {
 
     @Override
     protected void onPostExecute(Placemarks placemarks) {
-//        Log.i(this.getClass().toString(), "" + placemarks);
         ZaiNaliBus.getBus().post(new ReadKmlFinishedEvent(placemarks));
-
-        myKmlReader = null;
-        kmlId = 0;
-        resources = null;
     }
 }

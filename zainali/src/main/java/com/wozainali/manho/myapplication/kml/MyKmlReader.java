@@ -2,17 +2,11 @@ package com.wozainali.manho.myapplication.kml;
 
 import android.content.res.Resources;
 
-import com.wozainali.manho.myapplication.R;
 import com.wozainali.manho.myapplication.asynctasks.ReadKmlTask.ReadFilter;
 
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 

@@ -20,6 +20,39 @@
             android:layout_height="match_parent"
             android:id="@+id/map"/>
 
+        <LinearLayout
+            android:id="@+id/loading_layout"
+            style="@style/Wrap"
+            android:visibility="gone"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            >
+
+            <TextView
+                style="@style/Wrap"
+                android:textColor="@color/black"
+                android:text="Loading: " />
+
+            <TextView
+                style="@style/Wrap"
+                android:id="@+id/current_number"
+                android:textColor="@color/black"
+                />
+
+            <TextView
+                android:id="@+id/divider"
+                style="@style/Wrap"
+                android:text=" / "/>
+
+            <TextView
+                style="@style/Wrap"
+                android:id="@+id/total_countries"
+                android:textColor="@color/black"
+                />
+
+        </LinearLayout>
+
     </RelativeLayout>
 
     <fragment

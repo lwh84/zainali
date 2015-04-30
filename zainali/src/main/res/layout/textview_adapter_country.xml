@@ -1,13 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- TODO put this in styles -->
+<?xml version="1.0" encoding="utf-8"?><!-- TODO put this in styles -->
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/country_name"
-        android:layout_width="match_parent"
-        android:layout_height="72dp"
-        android:padding="16dp"
-        android:gravity="center_vertical"
-        android:text="..."
-        android:clickable="true"
-        android:background="@drawable/button_background"
-        android:onClick="searchForCountry"/>
+    android:id="@+id/country_name"
+    style="@style/TextForAdapter"
+    android:onClick="searchForCountry"
+    android:text="..." />
 
