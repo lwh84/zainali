@@ -4,14 +4,16 @@ import android.location.Location;
 
 import com.squareup.otto.Subscribe;
 import com.wozainali.manho.myapplication.asynctasks.ReadKmlTask;
+import com.wozainali.manho.myapplication.bus.ZaiNaliBus;
 import com.wozainali.manho.myapplication.bus.events.ReadKmlFinishedEvent;
+import com.wozainali.manho.myapplication.bus.events.TotalCountriesEvent;
 import com.wozainali.manho.myapplication.kml.Placemark;
 
 import java.util.ArrayList;
 
 /**
  * This class will hold my location and placemark results, so they can be accessed anywhere,
- * if null then sent a task to fetch
+ * TODO if null then sent a task to fetch
  */
 public class PlacemarksManager {
 
@@ -28,6 +30,7 @@ public class PlacemarksManager {
     @Subscribe
     public void onReadKmlFinished(ReadKmlFinishedEvent event) {
         placemarks = event.placemarksWrapper.getPlacemarks();
+        ZaiNaliBus.getBus().post(new TotalCountriesEvent(placemarks.size()));
     }
 
     public ArrayList<Placemark> getPlacemarks() {
