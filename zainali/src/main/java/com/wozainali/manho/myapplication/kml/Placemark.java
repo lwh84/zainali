@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Placemark {
 
-    String name, stringCoords;
+    String name;
     ArrayList<PlaceMarkPolygon> polygons;
 
     ArrayList<String> coordinates;
@@ -76,11 +76,12 @@ public class Placemark {
         this.maxLat = maxLat;
     }
 
-    public String getStringCoords() {
-        return stringCoords;
-    }
+    public boolean minMaxAlreadyLoaded() {
+        if (this.minLat == 0.0) return false;
+        if (this.maxLat == 0.0) return false;
+        if (this.minLong == 0.0) return false;
+        if (this.maxLong == 0.0) return false;
 
-    public void setStringCoords(String stringCoords) {
-        this.stringCoords = stringCoords;
+        return true;
     }
 }

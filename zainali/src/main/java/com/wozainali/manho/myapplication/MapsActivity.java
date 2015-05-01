@@ -44,6 +44,8 @@ import com.wozainali.manho.myapplication.kml.Placemark;
 
 import java.util.ArrayList;
 
+import static android.location.Criteria.*;
+
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private MapFragment mMap;
@@ -149,6 +151,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Creating a criteria object to retrieve provider
         Criteria criteria = new Criteria();
+        criteria.setAccuracy(ACCURACY_LOW);
 
         // Getting the name of the best provider
         String provider = locationManager.getBestProvider(criteria, true);
