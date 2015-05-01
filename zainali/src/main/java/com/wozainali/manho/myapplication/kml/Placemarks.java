@@ -3,6 +3,7 @@ package com.wozainali.manho.myapplication.kml;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+// A Wrapper for reading the file
 public class Placemarks {
 
     private ArrayList<Placemark> placemarks = new ArrayList<>();

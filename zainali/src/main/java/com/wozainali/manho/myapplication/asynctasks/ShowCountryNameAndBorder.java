@@ -63,10 +63,14 @@ public class ShowCountryNameAndBorder extends AsyncTask <Void, Void, Placemark> 
 
         // counter for displaying progress
         int currentNumber = 0;
+        ZaiNaliBus.getBus().post(new ShowCurrentNumberEvent(currentNumber));
 
         for (Placemark placemarkToCheck : placemarks) {
             // check min and max lat and long values, to filter out most of the placemarks
-            convert(placemarkToCheck.getCoordinatesList(), placemarkToCheck);
+
+            if (!placemarkToCheck.minMaxAlreadyLoaded()) {
+                convert(placemarkToCheck.getCoordinatesList(), placemarkToCheck);
+            }
 
             if (longitude > placemarkToCheck.getMinLong() &&
                     longitude < placemarkToCheck.getMaxLong() &&
@@ -81,12 +85,8 @@ public class ShowCountryNameAndBorder extends AsyncTask <Void, Void, Placemark> 
 
                 }
 
-
             }
             ZaiNaliBus.getBus().post(new ShowCurrentNumberEvent(currentNumber++));
-
-
-
 
         }
         alreadySearching = false;
@@ -132,6 +132,7 @@ public class ShowCountryNameAndBorder extends AsyncTask <Void, Void, Placemark> 
             }
 
             test = zaiNaliPolygon.PointIsInRegion(latitudeToCheck,longitudetoCheck,listOfLatLngs);
+            if (test) return true;
         }
 
         return test;
@@ -160,6 +161,8 @@ public class ShowCountryNameAndBorder extends AsyncTask <Void, Void, Placemark> 
 
             // send events to draw polylines
             bus.post(new DrawPolygonsEvent(placemark.getPolygons()));
+
+            alreadySearching = false;
         }
     }
 
