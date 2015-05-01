@@ -1,3 +1,9 @@
+# Update
+1 mei 2015: changed some things, and the app is now faster when country was already found. 
+https://github.com/lwh84/zainali/commit/e0bc4d89ff9946bc88ec7a4addc244b936b5ba39
+
+
+
 # Zainali
 Zai nali (Chinese) means "where is it?" or "There it is! "Just by changing the tone, you can change the meaning. This app will not have voice recognition...but by changing the location it should give you different results. :)
 
